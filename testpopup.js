@@ -1,5 +1,5 @@
 console.log("hehe");
-var urlArray = [];
+var urlList = [];
 document.addEventListener('DOMContentLoaded', function() {
     getAndRestoreURLList();
     document.getElementById("currentPageClick").addEventListener('click', addLink);
@@ -17,7 +17,7 @@ function addLink() {
         });
 }
 
-function getUrlListAndRestoreInDom(){
+function getAndRestoreURLList(){
     chrome.storage.local.get({urlList:[]},function(data){
         urlList = data.urlList;
         urlList.forEach(function(url){
@@ -26,4 +26,27 @@ function getUrlListAndRestoreInDom(){
     });
 }
 
-funciton
+function addURL(url) {
+    var newElement = document.createElement('li');
+    var newLink = document.createElement('a');
+    newLink.textContext = url[0];
+    newLink.setAttribute('href', url[0]);
+    newLink.setAttribute('target','_blank');
+    newElement.appendChild(newLink);
+    document.getElementById("myArticles").appendChild(newElement);
+}
+
+function addUrlToList(url){
+    if(urlList.indexOf(url) === -1){
+        //URL is not already in list
+        urlList.push(url);
+        saveUrlList();
+    }
+}
+function saveUrlList(callback){
+    chrome.storage.local.set({urlList},function(){
+        if(typeof callback === 'function'){
+            callback();
+        }
+    });
+}
